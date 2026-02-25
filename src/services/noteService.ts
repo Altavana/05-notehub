@@ -1,9 +1,14 @@
 import axios from 'axios';
-import type { Note, NewNote } from '../types/note';
+import type { Note, NoteTag } from '../types/note';
 
 export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
+}
+export interface NewNote {
+  title: string;
+  content: string;
+  tag: NoteTag;
 }
 const myKey = import.meta.env.VITE_NOTEHUB_TOKEN;
 const api = axios.create({
@@ -12,12 +17,12 @@ const api = axios.create({
 });
 
 export const fetchNotes = async (
-  query?: string,
+  search?: string,
   page?: number
 ): Promise<FetchNotesResponse> => {
   const response = await api.get<FetchNotesResponse>('/notes', {
     params: {
-      ...(query !== '' && { search: query }),
+      ...(search !== '' && { search }),
       page: page,
       perPage: 12,
     },
